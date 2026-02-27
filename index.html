@@ -1,0 +1,1104 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>AnSoft — 8 Марта</title>
+<style>
+  :root{
+    --txt: rgba(255,255,255,.95);
+    --txt2: rgba(255,255,255,.90);
+    --shadow: rgba(0,0,0,.55);
+    --pink: #ff6fb1;
+    --pink2:#ff9acb;
+    --item-size: 92px;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0}
+  body{font-family: system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif; overflow:hidden; background:#000}
+
+  .page{position:fixed; inset:0; display:none}
+  .page.active{display:block}
+
+  .bg{position:absolute; inset:0; background:center/cover no-repeat; transform: translateZ(0)}
+  .shade{position:absolute; inset:0; pointer-events:none;
+    background: radial-gradient(circle at 50% 20%, rgba(0,0,0,.06), rgba(0,0,0,.32) 75%, rgba(0,0,0,.48) 100%);
+  }
+  .topShade{position:absolute; inset:0; pointer-events:none;
+    background: linear-gradient(180deg, rgba(0,0,0,.42), rgba(0,0,0,0) 30%);
+  }
+
+  .logo{
+    position:absolute; top: clamp(14px, 2.2vh, 22px); left:50%; transform:translateX(-50%);
+    height: clamp(40px, 6.8vh, 64px);
+    filter: drop-shadow(0 16px 22px var(--shadow));
+    z-index: 20;
+  }
+
+  .btn{
+    appearance:none; border:0; cursor:pointer; padding:12px 18px; border-radius:999px;
+    font-weight:950; letter-spacing:.2px; font-size:14px;
+    box-shadow: 0 18px 26px rgba(0,0,0,.28);
+    background: linear-gradient(180deg, var(--pink2), var(--pink));
+    color:#fff;
+  }
+  .btn.secondary{
+    background: linear-gradient(180deg, #ffffff, #ffe6f2);
+    color: rgba(30,20,55,.92);
+  }
+  .btn:active{transform: translateY(1px)}
+  .btn:disabled{opacity:.55; cursor:not-allowed}
+
+  .navLeft{
+    position:absolute; top: clamp(14px, 2.2vh, 22px); left: clamp(14px, 2.2vh, 22px);
+    z-index: 40;
+  }
+
+  /* PAGE 1 */
+  .heroWrap{position:absolute; inset:0; display:grid; place-items:center; padding:18px; z-index:30}
+  .heroText{
+    width:min(1000px, 96vw);
+    text-align:center;
+    color: var(--txt);
+    text-shadow: 0 18px 44px rgba(0,0,0,.68);
+  }
+  .heroText h1{
+    margin:0 0 14px 0;
+    font-size: clamp(38px, 5.6vw, 72px);
+    line-height:1.04;
+  }
+  .heroText p{
+    margin:0 auto;
+    max-width: 78ch;
+    font-size: clamp(16px, 2.2vw, 20px);
+    line-height:1.65;
+    color: var(--txt2);
+  }
+  .heroActions{margin-top:18px; display:flex; justify-content:center; gap:12px; flex-wrap:wrap}
+
+  /* PAGE 2 */
+  .gateHit{
+    position:absolute; left:50%; top: 72%; transform:translate(-50%,-50%);
+    width: min(520px, 70vw); height: min(320px, 32vh);
+    background: transparent; border:0; cursor:pointer; z-index:30;
+  }
+  .gateHit::after{
+    content:"";
+    position:absolute; inset:-10px;
+    border-radius: 22px;
+    border: 4px solid rgba(255,255,255,.30);
+    box-shadow:
+      0 0 0 2px rgba(255,160,210,.18),
+      0 0 30px rgba(255,170,220,.20),
+      0 0 70px rgba(255,210,120,.12);
+    filter: drop-shadow(0 18px 34px rgba(0,0,0,.35));
+    animation: gatePulse 1.35s ease-in-out infinite;
+    pointer-events:none;
+  }
+  @keyframes gatePulse{
+    0%{ opacity:.35; transform: scale(0.995); }
+    50%{ opacity:.85; transform: scale(1.01); }
+    100%{ opacity:.35; transform: scale(0.995); }
+  }
+  .gateHit:focus{outline:3px solid rgba(255,255,255,.7); outline-offset:8px; border-radius:22px}
+
+  .gateHint{
+    position:absolute; left:50%; top: 86%; transform:translateX(-50%);
+    z-index:35;
+    font-weight: 950;
+    font-size: 14px;
+    color: rgba(25,18,50,.95);
+    background: rgba(255,255,255,.88);
+    padding: 10px 14px;
+    border-radius: 999px;
+    border: 1px solid rgba(255,255,255,.55);
+    box-shadow: 0 18px 40px rgba(0,0,0,.35);
+  }
+
+  /* PAGE 3 */
+  .galleryWrap{
+    position:absolute; left:50%; top: 56%; transform:translate(-50%,-50%);
+    width:min(1100px, 96vw);
+    z-index:30;
+  }
+  .grid{
+    display:grid;
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    gap:18px;
+    align-items:start;
+  }
+  .person{
+    cursor:pointer;
+    text-align:center;
+    color:#fff;
+    text-shadow: 0 14px 38px rgba(0,0,0,.62);
+    user-select:none;
+  }
+  .avatar{
+    width:132px; height:132px; border-radius:999px; margin:0 auto;
+    overflow:hidden;
+    box-shadow: 0 22px 40px rgba(0,0,0,.40);
+    border: 3px solid rgba(255,255,255,.55);
+    background: rgba(255,255,255,.18);
+  }
+  .avatar img{width:100%; height:100%; object-fit:cover; object-position: top;}
+  .person b{display:block; margin-top:10px; font-size:14px; line-height:1.2}
+  .person span{display:block; margin-top:4px; font-size:12px; color: rgba(255,255,255,.88)}
+
+  /* PAGE 4: GAME */
+  .gameHud{
+    position:absolute; left:50%; top: 14%; transform:translateX(-50%);
+    z-index:35;
+    text-align:center;
+    color:#fff;
+    text-shadow: 0 18px 44px rgba(0,0,0,.70);
+    width:min(980px, 96vw);
+  }
+  .gameHud b{display:block; font-size: clamp(18px, 2.8vw, 30px)}
+  .gameHud span{display:block; margin-top:6px; font-size:13px; color: rgba(255,255,255,.88)}
+
+  .gameField{
+    position:absolute; left:50%; top: 60%; transform:translate(-50%,-50%);
+    width:min(1200px, 96vw);
+    height:min(640px, 70vh);
+    z-index:35;
+  }
+
+  /* вместо "папки" - магическая зона приема */
+  .basket{
+    position:absolute; left:50%; bottom: 8%; transform:translateX(-50%);
+    width: min(360px, 72vw);
+    height: 160px;
+    border-radius: 999px;
+    background: rgba(255,255,255,.12);
+    border: 2px solid rgba(255,255,255,.28);
+    box-shadow: 0 32px 70px rgba(0,0,0,.32);
+    backdrop-filter: blur(2px);
+  }
+  .basket:before{
+    content:"";
+    position:absolute; inset:-14px;
+    border-radius: 999px;
+    border: 4px dashed rgba(255,255,255,.38);
+    box-shadow:
+      0 0 0 2px rgba(255,160,210,.14),
+      0 0 40px rgba(255,170,220,.18),
+      0 0 90px rgba(255,220,140,.12);
+    animation: ringPulse 1.55s ease-in-out infinite;
+    pointer-events:none;
+  }
+  @keyframes ringPulse{
+    0%{opacity:.40; transform: scale(.995)}
+    50%{opacity:.92; transform: scale(1.01)}
+    100%{opacity:.40; transform: scale(.995)}
+  }
+  .basket:after{
+    content:"Перетащите сюда";
+    position:absolute; left:50%; top:50%; transform: translate(-50%,-50%);
+    font-weight: 950;
+    letter-spacing:.2px;
+    color: rgba(255,255,255,.92);
+    text-shadow: 0 16px 40px rgba(0,0,0,.55);
+    opacity: .92;
+    pointer-events:none;
+    white-space: nowrap;
+  }
+
+  .counter{
+    position:absolute; right:14px; top:14px;
+    padding:10px 14px;
+    border-radius:999px;
+    background: rgba(255,255,255,.92);
+    color: rgba(25,18,50,.92);
+    font-weight: 1000;
+    box-shadow: 0 18px 30px rgba(0,0,0,.22);
+    z-index: 5;
+  }
+
+  .flower{
+    position:absolute; width: var(--item-size, 92px); height: var(--item-size, 92px);
+    cursor:grab; user-select:none; touch-action:none;
+    transition: transform .12s ease;
+  }
+  .flower:hover{transform: scale(1.03)}
+  .flower:active{cursor: grabbing}
+  .flower img{
+    width:100%; height:100%;
+    object-fit:contain;
+    filter: drop-shadow(0 18px 26px rgba(0,0,0,.28));
+    user-select:none;
+    -webkit-user-drag:none;
+  }
+
+  /* PAGE 5 */
+  .detailWrap{position:absolute; inset:0; display:grid; place-items:center; padding:18px; z-index:35}
+  .detail{
+    width:min(1100px, 96vw);
+    display:grid;
+    grid-template-columns: min(380px, 40vw) 1fr;
+    gap:22px;
+    align-items:center;
+  }
+  @media (max-width: 880px){ .detail{grid-template-columns: 1fr;} }
+  .portrait{
+    width: min(380px, 78vw);
+    aspect-ratio: 4/5;
+    border-radius:26px;
+    overflow:hidden;
+    box-shadow: 0 34px 70px rgba(0,0,0,.46);
+    border: 3px solid rgba(255,255,255,.50);
+    justify-self:center;
+  }
+  .portrait img{width:100%; height:100%; object-fit:cover; object-position: top;}
+  .detailText{color:#fff; text-shadow: 0 18px 46px rgba(0,0,0,.72)}
+  .detailText h2{margin:0 0 10px 0; font-size: clamp(26px, 3.8vw, 52px); line-height:1.05}
+  .detailText .role{font-weight:900; color: rgba(255,255,255,.90); margin-bottom:14px}
+  .detailText .desc{max-width:70ch; line-height:1.6; color: rgba(255,255,255,.92)}
+  .detailActions{margin-top:16px; display:flex; gap:12px; flex-wrap:wrap}
+
+  /* Fortune overlay */
+  .scroll{position:fixed; inset:0; display:none; z-index:80;}
+  .scroll.show{display:block}
+  .scrollShade{position:absolute; inset:0; background: rgba(0,0,0,.38)}
+  .scrollBox{
+    position:absolute; left:50%; top: 54%;
+    transform: translate(-50%,-50%);
+    width: min(860px, 94vw);
+    animation: drop .55s ease-out;
+  }
+  @keyframes drop{from{transform:translate(-50%,-55%) scale(.98); opacity:0} to{transform:translate(-50%,-50%) scale(1); opacity:1}}
+  .paper{
+    border-radius:26px;
+    padding:26px 22px;
+    background: linear-gradient(180deg, #fff6dc, #ffe9f3);
+    box-shadow: 0 40px 80px rgba(0,0,0,.48);
+    border: 6px solid rgba(255,255,255,.62);
+    position:relative;
+  }
+  .paper:before,.paper:after{
+    content:"";
+    position:absolute; top:50%; transform: translateY(-50%);
+    width:58px; height:122px; border-radius:999px;
+    background: linear-gradient(180deg, #ffd4e8, #ff8fc4);
+    box-shadow: 0 18px 30px rgba(0,0,0,.22);
+  }
+  .paper:before{left:-22px} .paper:after{right:-22px}
+  .paper h3{margin:0; text-align:center; color: rgba(25,18,50,.92); font-size:18px; font-weight:1000}
+  .paper p{margin:14px 0 0 0; text-align:center; color: rgba(25,18,50,.82); font-size: clamp(14px, 1.8vw, 18px); line-height:1.55; font-weight:900}
+  .scrollActions{margin-top:14px; display:flex; gap:10px; justify-content:center; flex-wrap:wrap}
+
+  /* список полученных предсказаний */
+  #fortuneList{margin-top:10px; display:grid; gap:10px; max-width:70ch;}
+
+  /* ===== Responsive fixes for small screens ===== */
+  :root{
+    --safe-top: env(safe-area-inset-top, 0px);
+    --safe-left: env(safe-area-inset-left, 0px);
+    --safe-right: env(safe-area-inset-right, 0px);
+  }
+
+    @media (max-width: 460px), (max-height: 780px){
+    .page.active{overflow-y:auto; -webkit-overflow-scrolling: touch;}
+    /* add some bottom padding so last elements aren't cut off */
+    .page.active::after{content:""; display:block; height: 24px;}
+  }
+
+  /* Top bar: keep back button from overlapping logo */
+  @media (max-width: 460px){
+    .logo{
+      top: calc(var(--safe-top) + 10px);
+      height: 44px;
+      opacity: .95;
+    }
+    .navLeft{
+      top: calc(var(--safe-top) + 10px);
+      left: calc(var(--safe-left) + 10px);
+    }
+    .navLeft .btn{
+      padding: 10px 14px;
+      font-size: 13px;
+    }
+    /* shift logo to the right a bit to clear back button area */
+    .logo{ left: calc(50% + 36px); }
+  }
+
+  /* Ultra-narrow screens: center logo and push back button down slightly */
+  @media (max-width: 380px){
+    .logo{ left: 50%; height: 40px; }
+    .navLeft{ top: calc(var(--safe-top) + 58px); }
+  }
+
+  /* Gallery: allow scrolling and keep avatars fitting */
+  @media (max-width: 460px){
+    .galleryWrap{
+      top: 52%;
+      width: min(520px, 94vw);
+    }
+    .grid{
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 14px;
+    }
+    .avatar{ width: 112px; height: 112px; }
+    .person b{ font-size: 13px; }
+    .person span{ font-size: 11px; }
+  }
+    }
+
+  /* Detail page: prevent clipping on small screens */
+  @media (max-width: 460px), (max-height: 780px){
+    #p-detail .detailWrap{
+      place-items: start center;
+      padding-top: calc(var(--safe-top) + 86px);
+      padding-bottom: 22px;
+    }
+    #p-detail .detail{
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+    #p-detail .portrait{
+      width: min(320px, 86vw);
+      aspect-ratio: 1/1.05;
+    }
+    #p-detail .detailText h2{
+      font-size: 28px;
+    }
+    #p-detail .detailActions .btn{
+      width: min(360px, 92vw);
+    }
+  }
+
+  /* Fortune cards: ensure they don't overflow */
+  @media (max-width: 460px){
+    #fortuneList > div{
+      font-size: 14px;
+    }
+  }
+
+
+  /* ===== No-scroll responsive fit: scale content to always fit ===== */
+
+  /* Helper: scale containers on short screens instead of scrolling */
+  @media (max-height: 820px){
+    #p-detail .detailWrap{padding: 0; place-items: start center;}
+    #p-detail .detail{
+      transform-origin: top center;
+      transform: scale(.92);
+      margin-top: calc(var(--safe-top) + 84px);
+    }
+  }
+  @media (max-height: 760px){
+    #p-detail .detail{transform: scale(.86); margin-top: calc(var(--safe-top) + 78px);}
+  }
+  @media (max-height: 700px){
+    #p-detail .detail{transform: scale(.80); margin-top: calc(var(--safe-top) + 72px);}
+  }
+
+  /* Small width: tighten typography/buttons so everything fits */
+  @media (max-width: 420px){
+    #p-detail .detailText h2{font-size: 26px;}
+    #p-detail .detailText .desc{font-size: 13px;}
+    #p-detail .detailActions{gap:10px}
+    #p-detail .detailActions .btn{padding: 10px 14px; font-size: 13px;}
+  }
+
+  /* Gallery: reduce avatar size and spacing so all items fit without scroll */
+  @media (max-height: 820px){
+    #p-gallery .galleryWrap{top: 54%;}
+    #p-gallery .grid{gap: 12px; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));}
+    #p-gallery .avatar{width: 104px; height: 104px;}
+  }
+  @media (max-height: 740px){
+    #p-gallery .galleryWrap{top: 56%;}
+    #p-gallery .avatar{width: 96px; height: 96px;}
+    #p-gallery .person b{font-size: 12px;}
+    #p-gallery .person span{font-size: 10px;}
+  }
+
+  /* Fortune scroll: keep text away from side pink rollers */
+  @media (max-width: 460px){
+    .paper{
+      padding-left: 64px;
+      padding-right: 64px;
+    }
+    .paper:before,.paper:after{
+      width: 44px;
+      height: 98px;
+    }
+    .paper:before{left:-12px}
+    .paper:after{right:-12px}
+    .paper p{
+      max-width: 34ch;
+      margin-left: auto;
+      margin-right: auto;
+      word-break: break-word;
+      hyphens: auto;
+    }
+  }
+  @media (max-width: 380px){
+    .paper{padding-left: 56px; padding-right: 56px;}
+    .paper:before,.paper:after{width: 40px; height: 92px;}
+  }
+
+
+  /* ===== Fit-to-screen: keep relative layout stable on small screens (no scroll, no overlap) ===== */
+
+  /* Keep logo always above content */
+  .logo{z-index: 80}
+  .navLeft{z-index: 90}
+
+  @media (max-width: 460px){
+    /* reserve top area so content never goes under logo/back */
+    #p-detail .detailWrap{
+      padding-top: calc(var(--safe-top) + 72px);
+      padding-left: 14px;
+      padding-right: 14px;
+      place-items: start center;
+    }
+    #p-detail .detail{
+      width: min(360px, 92vw);
+      grid-template-columns: 1fr;
+      gap: 12px;
+      align-items: start;
+    }
+    #p-detail .portrait{
+      width: min(320px, 86vw);
+      max-height: 34vh;
+      aspect-ratio: 1 / 1.05;
+    }
+    #p-detail .detailText h2{font-size: 26px; margin-bottom: 6px;}
+    #p-detail .detailText .role{margin-bottom: 10px; font-size: 13px;}
+    #p-detail .detailText .desc{font-size: 13px; line-height: 1.5;}
+    #p-detail .detailActions .btn{
+      width: min(360px, 92vw);
+      padding: 10px 14px;
+      font-size: 13px;
+    }
+    #p-detail #fortuneList{gap: 8px;}
+    #p-detail #fortuneList > div{
+      padding: 10px 12px !important;
+      border-radius: 14px !important;
+      font-size: 13px !important;
+    }
+  }
+
+  /* When predictions exist, tighten layout further so everything fits */
+  @media (max-width: 460px){
+    body.has-preds #p-detail .portrait{max-height: 28vh;}
+    body.has-preds #p-detail .detailText .desc{display:none;}
+    body.has-preds #p-detail .detailActions{margin-top: 10px;}
+  }
+
+  /* Ultra short height devices */
+  @media (max-width: 460px) and (max-height: 760px){
+    #p-detail .portrait{max-height: 28vh;}
+    #p-detail .detailText h2{font-size: 24px;}
+    #p-detail .detailText .role{font-size: 12px;}
+  }
+
+
+  /* Hero safe padding on small screens */
+  @media (max-width: 460px){
+    #p-hero .heroWrap{padding-left: 18px; padding-right: 18px; padding-top: calc(var(--safe-top) + 10px);}
+    #p-hero .heroText{width: min(360px, 92vw); }
+    #p-hero .heroText p{padding-left: 4px; padding-right: 4px;}
+  }
+  @media (max-width: 380px){
+    #p-hero .heroWrap{padding-left: 16px; padding-right: 16px;}
+    #p-hero .heroText p{font-size: 14px; line-height: 1.6;}
+  }
+
+
+  /* Mini-game item size on small screens */
+  @media (max-width: 460px){
+    :root{ --item-size: 76px; }
+  }
+  @media (max-width: 380px){
+    :root{ --item-size: 68px; }
+  }
+  @media (max-width: 340px){
+    :root{ --item-size: 62px; }
+  }
+
+</style>
+</head>
+<body>
+
+<section class="page active" id="p-hero">
+  <div class="bg" style="background-image:url('assets/bg_clouds.png')"></div>
+  <div class="shade"></div>
+  <img class="logo" src="assets/logo.png" alt="AnSoft"/>
+  <div class="heroWrap">
+    <div class="heroText">
+      <h1>С 8 марта!</h1>
+      <p>
+        Дорогие коллеги, поздравляем вас с праздником весны, красоты и вдохновения.<br>
+        Пусть в вашей жизни будет больше тепла, спокойствия и уверенности, а каждый день приносит хорошие новости, поддержку и улыбки.<br>
+        Желаем, чтобы работа радовала результатами, идеи находили воплощение легко, а рядом всегда были люди, с которыми надежно и приятно идти вперед.<br>
+        Пусть эта весна подарит вам энергию, гармонию и много поводов гордиться собой.
+      </p>
+      <div class="heroActions">
+        <button class="btn" id="to-castle">Далее</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="page" id="p-castle">
+  <div class="bg" style="background-image:url('assets/bg_castle.png')"></div>
+  <div class="topShade"></div>
+  <img class="logo" src="assets/logo.png" alt="AnSoft"/>
+  <div class="navLeft"><button class="btn secondary" data-back="p-hero">Назад</button></div>
+  <button class="gateHit" id="open-gate" aria-label="Ворота"></button>
+  <div class="gateHint">Нажмите на ворота</div>
+</section>
+
+<section class="page" id="p-gallery">
+  <div class="bg" style="background-image:url('assets/bg_hall.png')"></div>
+  <div class="topShade"></div>
+  <img class="logo" src="assets/logo.png" alt="AnSoft"/>
+  <div class="navLeft"><button class="btn secondary" data-back="p-castle">Назад</button></div>
+  <div class="galleryWrap">
+    <div class="grid" id="grid"></div>
+  </div>
+</section>
+
+<section class="page" id="p-game">
+  <div class="bg" id="bgGame" style="background-image:url('assets/bg_game.png')"></div>
+  <div class="topShade"></div>
+  <img class="logo" src="assets/logo.png" alt="AnSoft"/>
+  <div class="navLeft"><button class="btn secondary" data-back="p-gallery">Назад</button></div>
+  <div class="gameHud">
+    <b id="gameTitle">Мини-игра</b>
+    <span>Соберите букет: перетащите 6 предметов в зону приема.</span>
+  </div>
+  <div class="gameField" id="gameField">
+    <div class="basket" id="basket"><div class="counter" id="count">0/6</div></div>
+  </div>
+</section>
+
+<section class="page" id="p-detail">
+  <div class="bg" style="background-image:url('assets/bg_fortune.png')"></div>
+  <div class="shade"></div>
+  <img class="logo" src="assets/logo.png" alt="AnSoft"/>
+  <div class="navLeft"><button class="btn secondary" data-back="p-gallery" id="backToHallBtn">К залу</button></div>
+
+  <div class="detailWrap">
+    <div class="detail">
+      <div class="portrait"><img id="dImg" alt=""/></div>
+      <div class="detailText">
+        <h2 id="dName"></h2>
+        <div class="role" id="dRole"></div>
+        <div class="desc">Сегодня хочется сказать просто: спасибо за вашу работу. Пусть в этом году будет больше легкости, удачных решений и радостных моментов.</div>
+        <div class="detailActions">
+          <button class="btn" id="btnFortune">Получить предсказание</button>
+          <button class="btn secondary" id="btnReplay">Еще раз пройти мини-игру</button>
+        </div>
+        <div style="margin-top:10px; color: rgba(255,255,255,.86); font-weight: 800; text-shadow: 0 12px 30px rgba(0,0,0,.6);">
+          Получено предсказаний: <span id="fortuneCount">0</span>/2
+        </div>
+        <div id="fortuneList"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="scroll" id="scroll">
+  <div class="scrollShade" id="scrollClose"></div>
+  <div class="scrollBox">
+    <div class="paper">
+      <h3>Ваше предсказание</h3>
+      <p id="fortuneText"></p>
+    </div>
+    <div class="scrollActions">
+      <button class="btn" id="another">Другое</button>
+      <button class="btn secondary" id="closeScroll">Закрыть</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Папка, где лежат backgrounds/ и assets/ мини-игры (как у тебя на диске)
+  const MINIGAME_BASE = "backgrounds and assets to the mini game";
+
+  const EMP = [
+    {id:"e1", name:"Кучаева Анастасия", title:"программный архитектор", character:"Рапунцель", img:"assets/Rapuncel.jpg"},
+    {id:"e2", name:"Самотаева Юлия", title:"Руководитель проектов", character:"Моана", img:"assets/Moana.jpg"},
+    {id:"e3", name:"Насонова Анна", title:"Руководитель отдела внедрения", character:"Белоснежка", img:"assets/Belosnezhka.jpg"},
+    {id:"e4", name:"Васильева Ольга", title:"Специалист 1 линии ТП", character:"Золушка", img:"assets/Zolushkaa.jpg"},
+    {id:"e5", name:"Исаева Мария", title:"HR", character:"Белль (Белла)", img:"assets/Bella.jpg"},
+    {id:"e6", name:"Фахриева Елена", title:"Специалист 2 линии ТП", character:"Жасмин", img:"assets/Jasmine.jpg"},
+    {id:"e7", name:"Павлюткина Надежда", title:"Тестировщик", character:"Ариэль", img:"assets/Ariel.jpg"}
+  ];
+
+  const CHAR_TO_KEY = {
+    "Рапунцель": "rapuncel",
+    "Моана": "moana",
+    "Белоснежка": "belosnezhka",
+    "Золушка": "zolushka",
+    "Белль (Белла)": "bella",
+    "Жасмин": "jasmin",
+    "Ариэль": "ariel"
+  };
+
+  // 50 предсказаний
+  const PRED = [
+    "Весна принесет тебе ясность: сложные вещи станут простыми и решаемыми.",
+    "Тебя ждет приятное признание: твою работу заметят и оценят по достоинству.",
+    "В ближайшее время появится новая возможность, которая будет тебе по-настоящему к лицу.",
+    "Ты почувствуешь больше легкости: дела начнут складываться в правильном порядке.",
+    "Один теплый разговор откроет перед тобой нужную дверь.",
+    "В этом году у тебя будет больше спокойствия и больше поводов улыбаться.",
+    "Твоя уверенность вырастет, потому что результаты будут говорить сами за себя.",
+    "Тебя ждёт хорошая новость, связанная с проектом или деньгами.",
+    "Ты поймаешь свой темп: без суеты, но с сильным прогрессом.",
+    "Скоро случится маленькое чудо, которое сделает неделю заметно лучше.",
+    "Твои идеи будут звучать увереннее, и их начнут чаще поддерживать с первого раза.",
+    "Впереди период, когда ты будешь особенно довольна собой и своим выбором.",
+    "У тебя появится больше времени на то, что действительно наполняет.",
+    "Одна просьба или инициатива принесет неожиданно хороший результат.",
+    "Скоро ты получишь знак, что движешься в правильном направлении.",
+    "В этом сезоне тебя будут чаще радовать люди вокруг — и это будет взаимно.",
+    "Твоя внимательность к деталям принесет красивую победу.",
+    "Ты легко закроешь то, что давно тянулось — и почувствуешь облегчение.",
+    "Появится шанс проявить себя ярко, но без лишней суеты.",
+    "Тебя ждет приятный сюрприз в самое подходящее время.",
+    "В этом году ты сделаешь шаг, после которого станет проще дышать.",
+    "Одна встреча или сообщение запустит цепочку хороших событий.",
+    "Твоя доброжелательность вернется к тебе в виде поддержки и заботы.",
+    "Ты почувствуешь, что контроль возвращается — спокойно и уверенно.",
+    "В ближайшее время ты получишь добрую новость от коллег или друзей.",
+    "Тебе удастся решить вопрос, который казался сложнее, чем он есть.",
+    "Ты начнешь чаще выбирать себя — и это даст отличный эффект.",
+    "Твою работу оценят не только словами, но и делом.",
+    "Будет день, когда все сложится идеально по времени.",
+    "Ты неожиданно найдешь простой способ улучшить важную часть рутины.",
+    "Твоя энергия будет нарастать — мягко, но стабильно.",
+    "В этом сезоне тебя ждет приятное обновление: в планах, в настроении или в окружении.",
+    "Удача будет рядом, когда ты решишься на маленький шаг.",
+    "Ты получишь подтверждение того, что тебе можно доверять большие задачи.",
+    "Скоро появится повод отпраздновать — даже если сначала он будет маленьким.",
+    "Ты почувствуешь вдохновение там, где раньше была усталость.",
+    "Тебя ждет новая полезная привычка, которая реально облегчит жизнь.",
+    "Один проект принесет тебе удовольствие и чувство гордости.",
+    "Твои решения будут точными — без лишних сомнений.",
+    "В этом году ты чаще будешь слышать “спасибо” и “классно получилось”.",
+    "Ты получишь поддержку в момент, когда она особенно нужна.",
+    "У тебя появится больше уверенности в своих границах — и это всем пойдет на пользу.",
+    "Твоя смелость будет вознаграждена спокойным результатом.",
+    "Ты начнешь видеть больше возможностей, чем препятствий.",
+    "Впереди приятное улучшение в финансовом или рабочем вопросе.",
+    "Ты найдешь способ делать меньше — получая больше результата.",
+    "Будет неделя, когда тебя приятно удивит собственная продуктивность.",
+    "Ты научишься проще отпускать лишнее — и это принесет легкость.",
+    "Скоро у тебя появится новая цель, которая будет радовать каждый день.",
+    "Эта весна принесет тебе ровное счастье: спокойное, надежное, настоящее."
+  ];
+
+  // прогресс по сотруднице
+  const progress = {};
+  let suppressProgressSave = false;
+
+  let currentEmp = null;
+
+  // предсказания: максимум 2 на сотрудницу
+  let fortuneUsed = 0;
+  let fortuneHistory = [];
+  const fortuneUsedEl = document.getElementById('fortuneCount');
+  const fortuneListEl = document.getElementById('fortuneList');
+
+  function show(id){
+    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+  }
+
+  document.getElementById('to-castle').addEventListener('click', ()=>show('p-castle'));
+  document.getElementById('open-gate').addEventListener('click', ()=>show('p-gallery'));
+
+  document.querySelectorAll('[data-back]').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const target = btn.getAttribute('data-back');
+      show(target);
+    });
+  });
+
+  document.getElementById('backToHallBtn').addEventListener('click', (e)=>{
+    e.preventDefault();
+    show('p-gallery');
+  });
+
+  // Gallery
+  const grid = document.getElementById('grid');
+  EMP.forEach(e=>{
+    const item = document.createElement('div');
+    item.className = 'person';
+    item.innerHTML = `
+      <div class="avatar"><img src="${e.img}" alt="${e.character}"></div>
+      <b>${e.name}</b>
+      <span>${e.title}</span>
+    `;
+    item.addEventListener('click', () => {
+      currentEmp = e;
+
+      if (progress[e.id]?.completed){
+        openDetailFor(e);
+        show('p-detail');
+        return;
+      }
+
+      show('p-game');
+      requestAnimationFrame(() => {
+        startGameFor(e); // без await
+      });
+    });
+    grid.appendChild(item);
+  });
+
+  // GAME: drag items into basket
+  const bgGame = document.getElementById('bgGame');
+  const gameField = document.getElementById('gameField');
+  const basket = document.getElementById('basket');
+  const count = document.getElementById('count');
+  const need = 6;
+  let collected = 0;
+
+  // кешируем найденные ассеты (чтобы не грузить повторно)
+  const assetCache = {}; // key -> [paths]
+  const bgCache = {};    // key -> url
+
+  function preloadImage(url){
+    return new Promise((resolve, reject)=>{
+      const img = new Image();
+      img.onload = ()=>resolve(url);
+      img.onerror = ()=>reject(url);
+      img.src = url;
+    });
+  }
+
+  async function resolveBackgroundUrl(key){
+    if (bgCache[key]) return bgCache[key];
+    const candidates = [
+      `${MINIGAME_BASE}/backgrounds/${key}.jpg`,
+      `${MINIGAME_BASE}/backgrounds/${key}.png`,
+      `${MINIGAME_BASE}/backgrounds/${key}.jpeg`
+    ];
+    for (const url of candidates){
+      try{
+        await preloadImage(url);
+        bgCache[key] = url;
+        return url;
+      }catch(e){}
+    }
+    // fallback: оставить текущий
+    bgCache[key] = null;
+    return null;
+  }
+
+  async function resolveAssets(key){
+    if (assetCache[key]) return assetCache[key];
+
+    const urls = [];
+    // ожидаем нейминг key_01.png ... key_30.png
+    const candidates = [];
+    for (let i=1;i<=30;i++){
+      const nn = String(i).padStart(2,'0');
+      candidates.push(`${MINIGAME_BASE}/assets/${key}/${key}_${nn}.png`);
+    }
+
+    // грузим параллельно, фильтруем существующие
+    const results = await Promise.allSettled(candidates.map(u => preloadImage(u)));
+    for (const r of results){
+      if (r.status === "fulfilled") urls.push(r.value);
+    }
+
+    assetCache[key] = urls;
+    return urls;
+  }
+
+  function makeDraggable(el){
+    let startX=0,startY=0,originX=0,originY=0,drag=false;
+
+    const down=(x,y)=>{
+      if(el.dataset.done==="1") return;
+      drag=true;
+      el.style.zIndex=10;
+      startX=x; startY=y;
+      originX=parseFloat(el.style.left)||0;
+      originY=parseFloat(el.style.top)||0;
+    };
+    const move=(x,y)=>{
+      if(!drag) return;
+      el.style.left=(originX+(x-startX))+'px';
+      el.style.top =(originY+(y-startY))+'px';
+    };
+    const up=()=>{
+      if(!drag) return;
+      drag=false;
+      el.style.zIndex=1;
+
+      const b=basket.getBoundingClientRect();
+      const r=el.getBoundingClientRect();
+      const cx=r.left+r.width/2;
+      const cy=r.top+r.height/2;
+      const inside=cx>b.left && cx<b.right && cy>b.top && cy<b.bottom;
+
+      if(inside){
+        el.dataset.done="1";
+        el.style.opacity=0;
+        setTimeout(()=>el.remove(),180);
+        collected++;
+        count.textContent = `${collected}/${need}`;
+        if(collected>=need) finishGame();
+      }
+    };
+
+    el.addEventListener('mousedown',(e)=>{e.preventDefault(); down(e.clientX,e.clientY);});
+    window.addEventListener('mousemove',(e)=>move(e.clientX,e.clientY));
+    window.addEventListener('mouseup',up);
+
+    el.addEventListener('touchstart',(e)=>{if(!e.touches?.length) return; down(e.touches[0].clientX,e.touches[0].clientY);},{passive:true});
+    el.addEventListener('touchmove',(e)=>{if(!e.touches?.length) return; move(e.touches[0].clientX,e.touches[0].clientY);},{passive:true});
+    el.addEventListener('touchend',up,{passive:true});
+  }
+
+  function resetGame(assetUrls){
+  collected=0;
+  count.textContent=`${collected}/${need}`;
+  [...gameField.querySelectorAll('.flower')].forEach(n=>n.remove());
+
+  const rect = gameField.getBoundingClientRect();
+
+  // SAFE ZONE (отступы от краёв игрового поля)
+  const PAD_X = 36;
+  const PAD_TOP = 36;
+  const PAD_BOTTOM = 210; // чтобы не лезли в область корзины снизу
+  const ITEM = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--item-size')) || 92; // размер ассета
+
+  // если ассетов мало — повторяем
+  if (!assetUrls || assetUrls.length === 0) return;
+  const pool = assetUrls.slice();
+  while (pool.length < need) pool.push(...assetUrls);
+
+  // перемешать и взять need
+  for (let i = pool.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [pool[i], pool[j]] = [pool[j], pool[i]];
+  }
+  const chosen = pool.slice(0, need);
+
+  // исключаем область корзины (в координатах gameField)
+  const b = basket.getBoundingClientRect();
+  const bx0 = (b.left - rect.left) - 30;
+  const by0 = (b.top  - rect.top)  - 30;
+  const bx1 = (b.right - rect.left) + 30;
+  const by1 = (b.bottom - rect.top) + 30;
+
+  const placed = [];
+  const minDist = 130;   // чтобы не сбивались в кучу
+  const maxTries = 400;
+
+  function insideBasketZone(x, y){
+    const cx = x + ITEM/2;
+    const cy = y + ITEM/2;
+    return (cx > bx0 && cx < bx1 && cy > by0 && cy < by1);
+  }
+
+  function farFromOthers(x, y){
+    const cx = x + ITEM/2;
+    const cy = y + ITEM/2;
+    for (const p of placed){
+      const dx = cx - p.cx;
+      const dy = cy - p.cy;
+      if (dx*dx + dy*dy < minDist*minDist) return false;
+    }
+    return true;
+  }
+
+  // диапазоны для размещения
+  const xMin = PAD_X;
+  const xMax = Math.max(PAD_X, rect.width  - PAD_X - ITEM);
+  const yMin = PAD_TOP;
+  const yMax = Math.max(PAD_TOP, rect.height - PAD_BOTTOM - ITEM);
+
+  // генератор случайной точки с небольшим "джиттером"
+  function randPos(){
+    const x = xMin + Math.random()*(xMax - xMin);
+    const y = yMin + Math.random()*(yMax - yMin);
+    return {x, y};
+  }
+
+  for (let k=0;k<need;k++){
+    const f=document.createElement('div');
+    f.className='flower';
+    f.innerHTML = `<img src="${chosen[k]}" alt="">`;
+
+    let x=0,y=0, found=false;
+    for (let t=0;t<maxTries;t++){
+      const p = randPos();
+      x = p.x;
+      y = p.y;
+
+      if (insideBasketZone(x,y)) continue;
+      if (!farFromOthers(x,y)) continue;
+
+      found=true;
+      break;
+    }
+
+    // fallback: равномерная сетка (но всё равно с рандомным сдвигом)
+    if (!found){
+      const cols = Math.max(2, Math.floor((xMax - xMin) / 170));
+      x = xMin + (k % cols) * 150 + (Math.random()*22 - 11);
+      y = yMin + Math.floor(k / cols) * 150 + (Math.random()*22 - 11);
+    }
+
+    f.style.left = Math.round(x) + 'px';
+    f.style.top  = Math.round(y) + 'px';
+    f.dataset.done="0";
+    makeDraggable(f);
+    gameField.appendChild(f);
+
+    placed.push({cx: x + ITEM/2, cy: y + ITEM/2});
+  }
+}
+
+  async function startGameFor(emp){
+    document.getElementById('gameTitle').textContent = emp.character + ': соберите предметы';
+
+    const key = CHAR_TO_KEY[emp.character] || "";
+    if (key){
+      const bgUrl = await resolveBackgroundUrl(key);
+      if (bgUrl) bgGame.style.backgroundImage = `url('${bgUrl}')`;
+
+      const assets = await resolveAssets(key);
+      resetGame(assets);
+    }
+  }
+
+  function openDetailFor(emp){
+    currentEmp = emp;
+
+    // очистить UI, но не затирать прогресс
+    suppressProgressSave = true;
+    fortuneUsed = 0;
+    fortuneHistory = [];
+    updateFortuneUI();
+    suppressProgressSave = false;
+
+    // подгружаем сохраненное состояние
+    const st = progress[emp.id];
+    if (st && st.completed){
+      fortuneUsed = st.fortuneUsed || 0;
+      fortuneHistory = Array.isArray(st.fortuneHistory) ? st.fortuneHistory.slice() : [];
+      updateFortuneUI();
+    }
+
+    document.getElementById('dImg').src = emp.img;
+    document.getElementById('dImg').alt = emp.character;
+    document.getElementById('dName').textContent = emp.name;
+    document.getElementById('dRole').textContent = emp.title;
+  }
+
+  function finishGame(){
+    // отметить пройдено
+    if (!progress[currentEmp.id]) progress[currentEmp.id] = {};
+    progress[currentEmp.id].completed = true;
+
+    // сбросить предсказания при новом прохождении
+    progress[currentEmp.id].fortuneUsed = 0;
+    progress[currentEmp.id].fortuneHistory = [];
+
+    openDetailFor(currentEmp);
+    show('p-detail');
+  }
+
+  document.getElementById('btnReplay').addEventListener('click', () => {
+  if(!currentEmp) return;
+
+  show('p-game');
+  requestAnimationFrame(() => {
+    startGameFor(currentEmp); // БЕЗ await
+  });
+});
+
+  // Fortune overlay
+  const scroll = document.getElementById('scroll');
+  const fortuneText = document.getElementById('fortuneText');
+
+  function pickFortune(){
+    return PRED[Math.floor(Math.random()*PRED.length)];
+  }
+
+  function updateFortuneUI(){
+    fortuneUsedEl.textContent = String(fortuneUsed);
+
+    const anotherBtn = document.getElementById('another');
+    const mainBtn = document.getElementById('btnFortune');
+
+    if (fortuneUsed >= 2){
+      anotherBtn.style.display = "none";
+      mainBtn.disabled = true;
+    } else {
+      anotherBtn.style.display = "";
+      mainBtn.disabled = false;
+    }
+
+    // список полученных предсказаний
+    fortuneListEl.innerHTML = fortuneHistory.map((t, i) => `
+      <div style="
+        padding: 12px 14px;
+        border-radius: 16px;
+        background: rgba(0,0,0,.28);
+        border: 1px solid rgba(255,255,255,.18);
+        box-shadow: 0 18px 38px rgba(0,0,0,.25);
+        color: rgba(255,255,255,.92);
+        line-height: 1.55;
+        font-weight: 700;
+      ">
+        <div style="opacity:.85; font-weight: 900; margin-bottom: 6px;">Предсказание ${i+1}</div>
+        ${t}
+      </div>
+    `).join('');
+
+    // сохраняем состояние за сотрудницей (если не в режиме подавления)
+    if (!suppressProgressSave && currentEmp && progress[currentEmp.id]?.completed){
+      progress[currentEmp.id].fortuneUsed = fortuneUsed;
+      progress[currentEmp.id].fortuneHistory = fortuneHistory.slice();
+    }
+  }
+
+  function openScroll(){
+    if (fortuneUsed >= 2) return;
+    const f = pickFortune();
+    fortuneText.textContent = f;
+    fortuneHistory.push(f);
+    fortuneUsed++;
+    updateFortuneUI();
+    scroll.classList.add('show');
+  }
+
+  function closeScroll(){
+    scroll.classList.remove('show');
+  }
+
+  document.getElementById('btnFortune').addEventListener('click', openScroll);
+
+  document.getElementById('another').addEventListener('click', ()=>{
+    if (fortuneUsed >= 2) return;
+    const f = pickFortune();
+    fortuneText.textContent = f;
+    fortuneHistory.push(f);
+    fortuneUsed++;
+    updateFortuneUI();
+  });
+
+  document.getElementById('closeScroll').addEventListener('click', closeScroll);
+  document.getElementById('scrollClose').addEventListener('click', closeScroll);
+
+  window.addEventListener('keydown', (e)=>{
+    if(e.key==='Escape' && scroll.classList.contains('show')) closeScroll();
+  });
+
+  updateFortuneUI();
+</script>
+</body>
+</html>
