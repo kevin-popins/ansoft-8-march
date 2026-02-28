@@ -193,7 +193,7 @@
     100%{opacity:.40; transform: scale(.995)}
   }
   .basket:after{
-    content:"Перетащите сюда";
+    content:"Перетащи сюда";
     position:absolute; left:50%; top:50%; transform: translate(-50%,-50%);
     font-weight: 950;
     letter-spacing:.2px;
@@ -519,6 +519,68 @@
     :root{ --item-size: 62px; }
   }
 
+
+  /* Mini-game: smaller drop zone on small screens */
+  @media (max-width: 460px){
+    #p-game .basket{
+      width: min(300px, 68vw);
+      height: 132px;
+    }
+    #p-game .basket:before{ inset:-12px; border-width: 3px; }
+    #p-game .basket:after{ font-size: 13px; }
+    #p-game .counter{ padding: 8px 10px; font-size: 12px; }
+  }
+  @media (max-width: 380px){
+    #p-game .basket{
+      width: min(270px, 72vw);
+      height: 120px;
+    }
+    #p-game .basket:after{ font-size: 12px; }
+  }
+
+
+  /* Portrait fullscreen viewer */
+  .portrait{cursor: zoom-in;}
+  .imgModal{position:fixed; inset:0; display:none; z-index:200;}
+  .imgModal.show{display:block;}
+  .imgModalShade{position:absolute; inset:0; background: rgba(0,0,0,.78);}
+  .imgModalContent{
+    position:absolute; left:50%; top:50%;
+    transform: translate(-50%,-50%);
+    width: min(96vw, 860px);
+    height: min(92vh, 1200px);
+    display:grid; place-items:center;
+  }
+  .imgModalContent img{
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    border-radius: 18px;
+    box-shadow: 0 40px 90px rgba(0,0,0,.55);
+  }
+  .imgModalClose{
+    position:absolute;
+    right: 14px;
+    top: 14px;
+    width: 44px;
+    height: 44px;
+    border-radius: 999px;
+    border: 0;
+    cursor: pointer;
+    background: rgba(255,255,255,.92);
+    color: rgba(25,18,50,.92);
+    font-weight: 1000;
+    font-size: 18px;
+    box-shadow: 0 18px 30px rgba(0,0,0,.35);
+  }
+  .imgModalClose:active{transform: translateY(1px);}
+
+
+  /* Ensure portrait is above other blocks and receives pointer events */
+  #p-detail .portrait{position: relative; z-index: 60; pointer-events: auto;}
+  #p-detail .portrait *{pointer-events: auto;}
+
 </style>
 </head>
 <body>
@@ -531,7 +593,7 @@
     <div class="heroText">
       <h1>С 8 марта!</h1>
       <p>
-        Дорогие коллеги, поздравляем вас с праздником весны, красоты и вдохновения.<br>
+        Милые дамы, поздравляем вас с праздником весны, красоты и вдохновения.<br>
         Пусть в вашей жизни будет больше тепла, спокойствия и уверенности, а каждый день приносит хорошие новости, поддержку и улыбки.<br>
         Желаем, чтобы работа радовала результатами, идеи находили воплощение легко, а рядом всегда были люди, с которыми надежно и приятно идти вперед.<br>
         Пусть эта весна подарит вам энергию, гармонию и много поводов гордиться собой.
@@ -569,7 +631,7 @@
   <div class="navLeft"><button class="btn secondary" data-back="p-gallery">Назад</button></div>
   <div class="gameHud">
     <b id="gameTitle">Мини-игра</b>
-    <span>Соберите букет: перетащите 6 предметов в зону приема.</span>
+    <span>Пройди мини-игру: перетащи 6 предметов в волшебный круг.</span>
   </div>
   <div class="gameField" id="gameField">
     <div class="basket" id="basket"><div class="counter" id="count">0/6</div></div>
@@ -584,7 +646,7 @@
 
   <div class="detailWrap">
     <div class="detail">
-      <div class="portrait"><img id="dImg" alt=""/></div>
+      <div class="portrait" onclick="(function(){var im=document.getElementById('dImg');var m=document.getElementById('imgModal');var mi=document.getElementById('imgModalImg');if(!im||!m||!mi||!im.src)return;mi.src=im.src;mi.alt=im.alt||'';m.classList.add('show');m.setAttribute('aria-hidden','false');})();"><img id="dImg" alt=""/></div>
       <div class="detailText">
         <h2 id="dName"></h2>
         <div class="role" id="dRole"></div>
@@ -606,7 +668,7 @@
   <div class="scrollShade" id="scrollClose"></div>
   <div class="scrollBox">
     <div class="paper">
-      <h3>Ваше предсказание</h3>
+      <h3>Твое предсказание.</h3>
       <p id="fortuneText"></p>
     </div>
     <div class="scrollActions">
@@ -621,14 +683,14 @@
   const MINIGAME_BASE = "backgrounds and assets to the mini game";
 
   const EMP = [
-    {id:"e1", name:"Кучаева Анастасия", title:"программный архитектор", character:"Рапунцель", img:"assets/Rapuncel.jpg"},
-    {id:"e2", name:"Самотаева Юлия", title:"Руководитель проектов", character:"Моана", img:"assets/Moana.jpg"},
-    {id:"e3", name:"Насонова Анна", title:"Руководитель отдела внедрения", character:"Белоснежка", img:"assets/Belosnezhka.jpg"},
-    {id:"e4", name:"Васильева Ольга", title:"Специалист 1 линии ТП", character:"Золушка", img:"assets/Zolushkaa.jpg"},
-    {id:"e5", name:"Исаева Мария", title:"HR", character:"Белль (Белла)", img:"assets/Bella.jpg"},
-    {id:"e6", name:"Фахриева Елена", title:"Специалист 2 линии ТП", character:"Жасмин", img:"assets/Jasmine.jpg"},
-    {id:"e7", name:"Павлюткина Надежда", title:"Тестировщик", character:"Ариэль", img:"assets/Ariel.jpg"}
-  ];
+  {id:"e1", name:"Кучаева Анастасия", title:"Программный архитектор", character:"Рапунцель", img:"assets/Rapuncel.jpg"},
+  {id:"e2", name:"Самотаева Юлия", title:"Сервис-менеджер", character:"Моана", img:"assets/Moana.jpg"},
+  {id:"e3", name:"Насонова Анна", title:"HR менеджер", character:"Белоснежка", img:"assets/Belosnezhka.jpg"},
+  {id:"e4", name:"Васильева Ольга", title:"Глав. бух.", character:"Золушка", img:"assets/Zolushkaa.jpg"},
+  {id:"e5", name:"Исаева Мария", title:"Дизайнер", character:"Белль (Белла)", img:"assets/Bella.jpg"},
+  {id:"e6", name:"Фахриева Елена", title:"Менеджер проекта", character:"Жасмин", img:"assets/Jasmine.jpg"},
+  {id:"e7", name:"Павлюткина Надежда", title:"Аккауант-менеджер", character:"Ариэль", img:"assets/Ariel.jpg"}
+];
 
   const CHAR_TO_KEY = {
     "Рапунцель": "rapuncel",
@@ -962,7 +1024,7 @@
 }
 
   async function startGameFor(emp){
-    document.getElementById('gameTitle').textContent = emp.character + ': соберите предметы';
+    document.getElementById('gameTitle').textContent = emp.character + ': собери предметы';
 
     const key = CHAR_TO_KEY[emp.character] || "";
     if (key){
@@ -1099,6 +1161,17 @@
   });
 
   updateFortuneUI();
+
 </script>
+
+<!-- Portrait fullscreen modal -->
+<div class="imgModal" id="imgModal" aria-hidden="true">
+  <div class="imgModalShade" id="imgModalShade" onclick="(function(){var m=document.getElementById('imgModal');if(!m)return;m.classList.remove('show');m.setAttribute('aria-hidden','true');})();"></div>
+  <div class="imgModalContent" role="dialog" aria-modal="true" aria-label="Изображение">
+    <button class="imgModalClose" id="imgModalClose" onclick="(function(){var m=document.getElementById('imgModal');if(!m)return;m.classList.remove('show');m.setAttribute('aria-hidden','true');})();" aria-label="Закрыть">✕</button>
+    <img id="imgModalImg" alt=""/>
+  </div>
+</div>
+
 </body>
 </html>
